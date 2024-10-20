@@ -3,12 +3,13 @@ pipeline {
     stages {
             stage('Checkout') {
                 steps {
-                    git 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
+                    git branch: 'master',
+                    url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
                 }
             }
              stage('Build') {
                   steps {
-                      sh 'mvn clean install'
+                      sh 'mvn install -Dmaven.test.skip=true'
                   }
              }
              stage('Test') {
