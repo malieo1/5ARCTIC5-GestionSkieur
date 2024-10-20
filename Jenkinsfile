@@ -1,10 +1,10 @@
 pipeline {
-    agent an
+    agent any
     stages {
             stage('Checkout') {
                 steps {
                     git branch: 'master',
-                    url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
+                    url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git';
                 }
             }
              stage('Build') {
