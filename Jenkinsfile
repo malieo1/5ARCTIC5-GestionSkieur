@@ -15,13 +15,13 @@ pipeline {
         }
 
         // Commented out test stage for now
-        /*
+
         stage('Test') {
             steps {
                 sh 'mvn test'
             }
         }
-        */
+
     }
 
     post {
