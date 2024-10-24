@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 import tn.esprit.spring.entities.Skier;
 import tn.esprit.spring.repositories.ISkierRepository;
 import tn.esprit.spring.services.SkierServicesImpl;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class SkierServiceImplTest {
 
     @InjectMocks
