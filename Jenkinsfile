@@ -3,7 +3,7 @@ pipeline {
     stages {
             stage('Checkout') {
                 steps {
-                    git branch: 'master',
+                    git branch: 'aminerezgui-5arctic5git ',
                     url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git';
                 }
             }
