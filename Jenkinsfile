@@ -12,14 +12,27 @@ pipeline {
                       sh 'mvn install -Dmaven.test.skip=true'
                   }
              }
-             /*stage('Test') {
-                         steps {
-                             sh 'mvn test'
-                         }
-                     }*/
+
+             stage('Clean') {
+                  steps {
+                      sh 'mvn clean'
+                  }
+             }
+
+             stage('Compile') {
+                  steps {
+                      sh 'mvn compile'
+                  }
+             }
+
+             stage('Test') {
+                  steps {
+                      sh 'mvn test'
+                  }
+             }
 
 
-                 }
+             }
 
                  post {
                      success {
