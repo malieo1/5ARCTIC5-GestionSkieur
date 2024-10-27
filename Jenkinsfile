@@ -40,6 +40,14 @@ pipeline {
                    }
                }
 
+        stage('Docker Build') {
+            steps {
+                script {
+                    docker.build("gestion-station-ski:latest", "--build-arg NEXUS_USERNAME=${env.NEXUS_USERNAME} --build-arg NEXUS_PASSWORD=${env.NEXUS_PASSWORD} .")
+                }
+            }
+        }
+
     }
 
     post {
