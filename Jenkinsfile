@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-            // Specify the SonarQube environment variable name as configured in Jenkins
-            SONARQUBE_ENV = 'SonarQube'  // Replace with the actual name if different
-        }
-
     stages {
         stage('Checkout') {
             steps {
