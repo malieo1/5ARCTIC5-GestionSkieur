@@ -1,6 +1,9 @@
 pipeline {
     agent any
 
+    environment {
+        SONARQUBE_ENV = 'SonarQube'  // Replace with your SonarQube environment name
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -24,19 +27,18 @@ pipeline {
             }
         }
 
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv(SONARQUBE_ENV) {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=pipeline-1'
+                }
+            }
+        }
+
     }
 
-    node {
-      stage('SCM') {
-        checkout scm
-      }
-      stage('SonarQube Analysis') {
-        def mvn = tool 'M2_HOME';
-        withSonarQubeEnv() {
-          sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=pipeline-1 -Dsonar.projectName='pipeline-1'"
-        }
-      }
-    }
+
 
     post {
         success {
