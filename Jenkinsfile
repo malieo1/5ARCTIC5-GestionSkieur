@@ -20,7 +20,7 @@ pipeline {
 
             stage('MVN Sonarqube') {
                                steps {
-                                   withCredentials([string(credentialsId: 'SonarQube_Token', variable: 'SONAR_TOKEN')]) {
+                                   withCredentials([string(credentialsId: 'SonarQube', variable: 'SONAR_TOKEN')]) {
                                        sh "mvn sonar:sonar -Dsonar.login=squ_be80c3f2f2118c43ca72c88e151369352f4f4a3c"
                                    }
                                }
