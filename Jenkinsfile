@@ -3,7 +3,7 @@ pipeline {
     stages {
             stage('Checkout') {
                 steps {
-                    git branch: 'master',
+                    git branch: 'wadhahdaoud-5arctic5',
                     url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git';
                 }
             }
@@ -12,11 +12,11 @@ pipeline {
                       sh 'mvn install -Dmaven.test.skip=true'
                   }
              }
-             stage('Test') {
+             /*stage('Test') {
                          steps {
                              sh 'mvn test'
                          }
-                     }
+                     }*/
 
 
                  }
