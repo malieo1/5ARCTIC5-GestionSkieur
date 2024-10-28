@@ -30,15 +30,11 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-                    steps {
-                        echo 'Running SonarQube analysis...'
-                        // Set the SonarQube environment variable configured in Jenkins
-                        withSonarQubeEnv(SONARQUBE_ENV) {
-                            // Adjust project key and other properties based on your project
-                            sh 'mvn sonar:sonar -Dsonar.projectKey=my_project_key'
-                        }
-                    }
-                }
+            def mvn = tool 'Default Maven';
+            withSonarQubeEnv() {
+              sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=jenkins-pipeline -Dsonar.projectName='jenkins-pipeline'"
+            }
+          }
 
     }
 
