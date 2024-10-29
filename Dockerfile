@@ -1,29 +1,21 @@
-# Start from a lightweight Java runtime image
+# Start with an OpenJDK 11 base image
 FROM openjdk:11-jre-slim
 
-# Define environment variables for Nexus credentials and JAR location
-ARG NEXUS_URL="http://192.168.33.10:8081/repository/maven-releases"
-ARG GROUP_ID="tn/esprit/spring"
-ARG ARTIFACT_ID="gestion-station-ski"
-ARG VERSION="1.0"
+# Define build arguments for Nexus credentials
 ARG NEXUS_USERNAME
 ARG NEXUS_PASSWORD
+ARG VERSION
 
-# Construct JAR download URL
-ENV JAR_URL="${NEXUS_URL}/${GROUP_ID}/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}.jar"
-
-# Set the directory for the app
+# Set the working directory
 WORKDIR /app
 
-# Download the JAR from Nexus and save it to the app directory
+# Download the JAR from Nexus using credentials and version
 RUN apt-get update && \
     apt-get install -y curl && \
-    curl -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} -o ${ARTIFACT_ID}.jar ${JAR_URL} && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD -o app.jar "http://192.168.33.10:8081/repository/maven-releases/tn/esprit/spring/gestion-station-ski/${VERSION}/gestion-station-ski-${VERSION}.jar"
 
-# Expose port (if applicable)
+# Expose the application's port
 EXPOSE 8082
 
-# Command to run the JAR
-CMD ["java", "-jar", "gestion-station-ski.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
