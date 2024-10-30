@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         SONARQUBE_ENV = 'SonarQube'  // Replace with your SonarQube environment name
+        NEXUS_CREDENTIALS_ID = 'deploymentRepo'  // Nexus credentials ID in Jenkins
+
     }
     stages {
         stage('Checkout') {
@@ -35,6 +37,19 @@ pipeline {
                 }
             }
         }
+
+         stage('Deploy to Nexus') {
+                    steps {
+                        withCredentials([usernamePassword(credentialsId: NEXUS_CREDENTIALS_ID, usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                            sh '''
+                                mvn deploy -Dmaven.test.skip=true \
+                                  -DaltDeploymentRepository=nexus::default::http://localhost:8081/repository/maven-releases \
+                                  -Dnexus.username=admin \
+                                  -Dnexus.password=nexus
+                            '''
+                        }
+                    }
+                }
 
     }
 
