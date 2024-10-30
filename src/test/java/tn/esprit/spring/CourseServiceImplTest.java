@@ -54,13 +54,13 @@ class CourseServiceImplTest {
         assertEquals(course, updatedCourse);
         verify(courseRepository, times(1)).save(course);
     }
-//
-//    @Test
-//    void testRetrieveCourse() {
-//        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-//        Course foundCourse = courseServices.retrieveCourse(1L);
-//        assertEquals(course, foundCourse);
-//        verify(courseRepository, times(1)).findById(1L);
-//    }
-//
+
+    @Test
+    void testRetrieveCourse() {
+        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
+        Course foundCourse = courseServices.retrieveCourse(1L);
+        assertEquals(course, foundCourse);
+        verify(courseRepository, times(1)).findById(1L);
+    }
+
 }

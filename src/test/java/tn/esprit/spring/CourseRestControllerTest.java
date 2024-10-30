@@ -58,16 +58,16 @@ class CourseRestControllerTest {
 //                .andExpect(jsonPath("$.timeSlot").value(course.getTimeSlot()));
 //    }
 //
-//    @Test
-//    void testGetCourseById() throws Exception {
-//        Course course = new Course(1L, 1, TypeCourse.COLLECTIVE_CHILDREN, Support.SKI, 100.0f, 10, null);
-//        when(courseServices.retrieveCourse(1L)).thenReturn(course);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get("/course/get/1"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.numCourse").value(course.getNumCourse()))
-//                .andExpect(jsonPath("$.level").value(course.getLevel()));
-//    }
+    @Test
+    void testGetCourseById() throws Exception {
+        Course course = new Course(1L, 1, TypeCourse.COLLECTIVE_CHILDREN, Support.SKI, 100.0f, 10, null);
+        when(courseServices.retrieveCourse(1L)).thenReturn(course);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/course/get/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numCourse").value(course.getNumCourse()))
+                .andExpect(jsonPath("$.level").value(course.getLevel()));
+    }
 @Test
 void testUpdateCourse() throws Exception {
     Course course = new Course(1L, 1, null, null, 100.0f, 10, null);
