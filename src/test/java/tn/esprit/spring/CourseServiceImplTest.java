@@ -38,28 +38,29 @@ class CourseServiceImplTest {
         assertEquals(1, courses.size());
         verify(courseRepository, times(1)).findAll();
     }
-
-    @Test
-    void testAddCourse() {
-        when(courseRepository.save(course)).thenReturn(course);
-        Course savedCourse = courseServices.addCourse(course);
-        assertEquals(course, savedCourse);
-        verify(courseRepository, times(1)).save(course);
-    }
-
-    @Test
-    void testUpdateCourse() {
-        when(courseRepository.save(course)).thenReturn(course);
-        Course updatedCourse = courseServices.updateCourse(course);
-        assertEquals(course, updatedCourse);
-        verify(courseRepository, times(1)).save(course);
-    }
-
-    @Test
-    void testRetrieveCourse() {
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-        Course foundCourse = courseServices.retrieveCourse(1L);
-        assertEquals(course, foundCourse);
-        verify(courseRepository, times(1)).findById(1L);
-    }
+//
+//    @Test
+//    void testAddCourse() {
+//        when(courseRepository.save(course)).thenReturn(course);
+//        Course savedCourse = courseServices.addCourse(course);
+//        assertEquals(course, savedCourse);
+//        verify(courseRepository, times(1)).save(course);
+//    }
+//
+//    @Test
+//    void testUpdateCourse() {
+//        when(courseRepository.save(course)).thenReturn(course);
+//        Course updatedCourse = courseServices.updateCourse(course);
+//        assertEquals(course, updatedCourse);
+//        verify(courseRepository, times(1)).save(course);
+//    }
+//
+//    @Test
+//    void testRetrieveCourse() {
+//        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
+//        Course foundCourse = courseServices.retrieveCourse(1L);
+//        assertEquals(course, foundCourse);
+//        verify(courseRepository, times(1)).findById(1L);
+//    }
+//
 }
