@@ -43,7 +43,7 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: NEXUS_CREDENTIALS_ID, usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                             sh '''
                                 mvn deploy -Dmaven.test.skip=true \
-                                  -DaltDeploymentRepository=nexus::default::http://localhost:8081/repository/maven-releases \
+                                  -DaltDeploymentRepository=nexus::default::http://192.168.33.10:8081/repository/maven-releases/ \
                                   -Dnexus.username=admin \
                                   -Dnexus.password=nexus
                             '''
