@@ -68,4 +68,16 @@ class CourseRestControllerTest {
 //                .andExpect(jsonPath("$.numCourse").value(course.getNumCourse()))
 //                .andExpect(jsonPath("$.level").value(course.getLevel()));
 //    }
+@Test
+void testUpdateCourse() throws Exception {
+    Course course = new Course(1L, 1, null, null, 100.0f, 10, null);
+    when(courseServices.updateCourse(any(Course.class))).thenReturn(course);
+
+    mockMvc.perform(MockMvcRequestBuilders.put("/course/update")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"numCourse\":1,\"level\":1,\"price\":100.0,\"timeSlot\":10}"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.numCourse").value(course.getNumCourse()))
+            .andExpect(jsonPath("$.level").value(course.getLevel()));
+}
 }

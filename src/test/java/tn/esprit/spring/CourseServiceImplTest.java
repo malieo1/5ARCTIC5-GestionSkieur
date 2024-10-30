@@ -47,13 +47,13 @@ class CourseServiceImplTest {
 //        verify(courseRepository, times(1)).save(course);
 //    }
 //
-//    @Test
-//    void testUpdateCourse() {
-//        when(courseRepository.save(course)).thenReturn(course);
-//        Course updatedCourse = courseServices.updateCourse(course);
-//        assertEquals(course, updatedCourse);
-//        verify(courseRepository, times(1)).save(course);
-//    }
+    @Test
+    void testUpdateCourse() {
+        when(courseRepository.save(course)).thenReturn(course);
+        Course updatedCourse = courseServices.updateCourse(course);
+        assertEquals(course, updatedCourse);
+        verify(courseRepository, times(1)).save(course);
+    }
 //
 //    @Test
 //    void testRetrieveCourse() {
