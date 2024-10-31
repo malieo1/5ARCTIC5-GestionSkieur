@@ -3,18 +3,14 @@ pipeline {
     environment {
         // Nexus credentials
         NEXUS_CREDENTIALS = credentials('nexus-admin-credentials')
+        //Docker credentials
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'malekzahmoul-5arctic5', url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
-            }
-        }
-
-        stage('Set Version') {
-            steps {
-                sh 'mvn build-helper:parse-version versions:set -DnewVersion=1.0.${BUILD_NUMBER} -DgenerateBackupPoms=false'
             }
         }
 
@@ -46,11 +42,20 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Build & Push') {
             steps {
                 script {
                     def version = readMavenPom().getVersion()
-                    docker.build("gestion-station-ski:${version}", "--build-arg NEXUS_USERNAME=${env.NEXUS_USERNAME} --build-arg NEXUS_PASSWORD=${env.NEXUS_PASSWORD} .")
+                    def imageName = "your-dockerhub-username/gestion-station-ski:${version}"
+
+                    // Build the Docker image
+                    docker.build(imageName, "--build-arg NEXUS_USERNAME=${env.NEXUS_USERNAME} --build-arg NEXUS_PASSWORD=${env.NEXUS_PASSWORD} --build-arg VERSION=${version} .")
+
+                    // Login and push to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                        sh "docker push ${imageName}"
+                    }
                 }
             }
         }

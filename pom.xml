@@ -13,12 +13,6 @@
 	<version>1.0</version>
 	<name>gestion-station-ski</name>
 	<description>Demo project for Spring Boot</description>
-	<!-- -->
-	<scm>
-		<connection>scm:git:https://github.com/malieo1/5ARCTIC5-GestionSkieur.git</connection>
-		<developerConnection>scm:git:https://github.com/malieo1/5ARCTIC5-GestionSkieur.git</developerConnection>
-		<url>https://github.com/malieo1/5ARCTIC5-GestionSkieur</url>
-	</scm>
 	<properties>
 		<java.version>1.8</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
@@ -88,23 +82,6 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>buildnumber-maven-plugin</artifactId>
-				<version>1.4</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>create</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<doCheck>true</doCheck>
-					<doUpdate>true</doUpdate>
-					<shortRevisionLength>8</shortRevisionLength>
 				</configuration>
 			</plugin>
 		</plugins>
