@@ -47,11 +47,12 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    def version = readMavenPom().getVersion()
+                    // Specify the fixed version directly
+                    def version = '0.0.1'
                     def imageName = "your-dockerhub-username/gestion-station-ski:${version}"
 
                     // Build the Docker image
-                    docker.build(imageName, "--build-arg NEXUS_USERNAME=${env.NEXUS_USERNAME} --build-arg NEXUS_PASSWORD=${env.NEXUS_PASSWORD} --build-arg VERSION=${version} .")
+                    docker.build(imageName, "--build-arg NEXUS_USERNAME=${env.NEXUS_USERNAME} --build-arg NEXUS_PASSWORD=${env.NEXUS_PASSWORD} .")
 
                     // Login and push to Docker Hub
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
