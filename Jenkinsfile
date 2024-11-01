@@ -3,8 +3,10 @@ pipeline {
     environment {
         // Nexus credentials
         NEXUS_CREDENTIALS = credentials('nexus-admin-credentials')
-        //Docker credentials
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
+        RELEASE_VERSION = "1.0"
+        registry = "malekzahmoul20971/gestion-station-ski"
+        registryCredential = 'docker-hub-credentials'
+        dockerImage = ''
     }
 
     stages {
@@ -44,21 +46,11 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push') {
+        stage('Building our image') {
             steps {
                 script {
+                    dockerImage = docker.build "${registry}:${RELEASE_VERSION}"
 
-                    def version = '1.0'
-                    def imageName = "malekzahmoul20971/gestion-station-ski:${version}"
-
-                    // Build the Docker image
-                    sh "docker build -t ${imageName} --build-arg NEXUS_USERNAME=${env.NEXUS_CREDENTIALS_USR} --build-arg NEXUS_PASSWORD=${env.NEXUS_CREDENTIALS_PSW} ."
-
-                    // Login and push to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-                        sh "docker push ${imageName}"
-                    }
                 }
             }
         }
