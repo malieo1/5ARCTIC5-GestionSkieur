@@ -1,5 +1,11 @@
 pipeline {
     agent any
+
+        environment {
+            // Nexus credentials
+            NEXUS_CREDENTIALS = credentials('nexus-credentials')
+
+        }
     stages {
             stage('Checkout') {
                 steps {
@@ -25,6 +31,14 @@ pipeline {
                                    }
                                }
                            }
+
+             stage('Deploy to Nexus') {
+                        steps {
+                            withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'admin', passwordVariable: 'admin')]) {
+                                sh "mvn deploy -DskipTests"
+                            }
+                        }
+                    }
 
 
 
