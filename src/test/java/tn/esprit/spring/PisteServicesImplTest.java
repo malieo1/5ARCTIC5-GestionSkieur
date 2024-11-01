@@ -2,9 +2,10 @@ package tn.esprit.spring;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import tn.esprit.spring.entities.Piste;
 import tn.esprit.spring.entities.Color;
 import tn.esprit.spring.repositories.IPisteRepository;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class PisteServicesImplTest {
 
     @Mock
@@ -29,7 +31,6 @@ class PisteServicesImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         piste = new Piste(1L, "Blue Trail", Color.BLUE, 3000, 15, null);
     }
 
@@ -63,4 +64,6 @@ class PisteServicesImplTest {
         assertEquals(piste, foundPiste);
         verify(pisteRepository, times(1)).findById(1L);
     }
+
+    // Additional tests can be added here for edge cases.
 }
