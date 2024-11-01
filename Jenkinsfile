@@ -48,11 +48,11 @@ pipeline {
             steps {
                 script {
                     // Specify the fixed version directly
-                    def version = '0.0.1'
-                    def imageName = "your-dockerhub-username/gestion-station-ski:${version}"
+                    def version = '1.0'
+                    def imageName = "malekzahmoul20971/gestion-station-ski:${version}"
 
                     // Build the Docker image
-                    docker.build(imageName, "--build-arg NEXUS_USERNAME=${env.NEXUS_USERNAME} --build-arg NEXUS_PASSWORD=${env.NEXUS_PASSWORD} .")
+                    docker.build(imageName, "--build-arg NEXUS_USERNAME=${env.NEXUS_CREDENTIALS_USR} --build-arg NEXUS_PASSWORD=${env.NEXUS_CREDENTIALS_PSW} .")
 
                     // Login and push to Docker Hub
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
