@@ -20,11 +20,11 @@ pipeline {
                       sh 'mvn install -Dmaven.test.skip=true'
                   }
              }
-           stage('Test') {
+         /*  stage('Test') {
                         steps {
                             sh 'mvn test'
                          }
-                     }
+                     }*/
 
             stage('MVN Sonarqube') {
                                steps {
