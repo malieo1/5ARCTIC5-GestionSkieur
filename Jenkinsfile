@@ -3,6 +3,7 @@ pipeline {
     environment {
         // Nexus credentials
         NEXUS_CREDENTIALS = credentials('nexus-admin-credentials')
+        DOCKER_CREDENTIALS = credentials ('docker-hub-credentials')
         RELEASE_VERSION = "1.0"
         registry = "malekzahmoul20971/gestion-station-ski"
         registryCredential = 'docker-hub-credentials'
@@ -57,7 +58,7 @@ pipeline {
         stage('Push to DockerHub') {
            steps {
                script {
-                   withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                   withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                    sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                    sh "docker push $DOCKER_IMAGE"
                     }
