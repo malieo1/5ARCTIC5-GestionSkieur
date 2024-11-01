@@ -4,6 +4,8 @@ pipeline {
         environment {
             // Nexus credentials
             NEXUS_CREDENTIALS = credentials('nexus-credentials')
+            DOCKER_CREDENTIALS = credentials('docker-credentials')
+            DOCKER_IMAGE = 'rezguimedamine/gestion-station-ski:1.0'
 
         }
     stages {
@@ -40,6 +42,24 @@ pipeline {
                         }
                     }
 
+             stage('Build Docker Image') {
+                         steps {
+                             script {
+                                 sh "docker build -t $DOCKER_IMAGE ."
+                             }
+                         }
+                     }
+
+                     stage('Push to DockerHub') {
+                         steps {
+                             script {
+                                 withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                                     sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                                     sh "docker push $DOCKER_IMAGE"
+                                 }
+                             }
+                         }
+                     }
 
 
                  }
