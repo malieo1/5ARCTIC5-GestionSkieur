@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SONARQUBE_ENV = 'SonarQube'  // Replace with your SonarQube environment name
-        NEXUS_CREDENTIALS_ID = 'nexus'  // Nexus credentials ID in Jenkins
+        NEXUS_CREDENTIALS_ID = 'nexus-credentials'  // Nexus credentials ID in Jenkins
 
     }
     stages {
