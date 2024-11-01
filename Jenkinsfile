@@ -55,16 +55,16 @@ pipeline {
                 }
             }
         }
-        stage('Push to DockerHub') {
-           steps {
-               script {
-                   withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                   sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-                   sh "docker push $DOCKER_IMAGE"
-                    }
-               }
+stage('Push to DockerHub') {
+   steps {
+       script {
+           withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+               sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+               sh "docker push ${dockerImage.imageName()}"
            }
-        }
+       }
+   }
+}
     }
 
     post {
