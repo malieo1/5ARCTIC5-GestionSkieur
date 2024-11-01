@@ -41,12 +41,13 @@ class CourseServiceImplTest {
 
     @Test
     void testAddCourse() {
-        when(courseRepository.save(course)).thenReturn(course);
+        when(courseRepository.save(any(Course.class))).thenReturn(course);
+
         Course savedCourse = courseServices.addCourse(course);
+
         assertEquals(course, savedCourse);
         verify(courseRepository, times(1)).save(course);
     }
-
     @Test
     void testUpdateCourse() {
         when(courseRepository.save(course)).thenReturn(course);
