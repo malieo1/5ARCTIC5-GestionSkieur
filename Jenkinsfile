@@ -22,6 +22,20 @@ pipeline {
             }
         }
 
+        stage('Test') {
+                    steps {
+                        echo 'Running unit tests...'
+                        sh 'mvn test'
+                    }
+                }
+
+        stage('Package') {
+                    steps {
+                        echo 'Packaging the application...'
+                        sh 'mvn package'
+                    }
+                }
+
         stage('Build') {
             steps {
                 echo 'Building the project...'
