@@ -38,15 +38,15 @@ class CourseServiceImplTest {
         assertEquals(1, courses.size());
         verify(courseRepository, times(1)).findAll();
     }
-//
-//    @Test
-//    void testAddCourse() {
-//        when(courseRepository.save(course)).thenReturn(course);
-//        Course savedCourse = courseServices.addCourse(course);
-//        assertEquals(course, savedCourse);
-//        verify(courseRepository, times(1)).save(course);
-//    }
-//
+
+    @Test
+    void testAddCourse() {
+        when(courseRepository.save(course)).thenReturn(course);
+        Course savedCourse = courseServices.addCourse(course);
+        assertEquals(course, savedCourse);
+        verify(courseRepository, times(1)).save(course);
+    }
+
     @Test
     void testUpdateCourse() {
         when(courseRepository.save(course)).thenReturn(course);
