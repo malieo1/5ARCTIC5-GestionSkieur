@@ -47,7 +47,7 @@ pipeline {
             }
         }
 
-        stage('Building our image') {
+      /*  stage('Building our image') {
             steps {
                 script {
                     dockerImage = docker.build "${registry}:${RELEASE_VERSION}"
@@ -63,7 +63,7 @@ stage('Push to DockerHub') {
                sh "docker push ${dockerImage.imageName()}"
            }
        }
-   }
+   }*/
 }
     }
 
