@@ -6,9 +6,8 @@ services:
     container_name: mysql_db
     environment:
       MYSQL_DATABASE: stationSki
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root  # Set the root password
+      # Remove MYSQL_USER and MYSQL_PASSWORD as they are not needed for root
     ports:
       - "3306:3306"
     volumes:
@@ -21,8 +20,8 @@ services:
       - mysql
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/stationSki?createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_USERNAME: root  # Must match MYSQL_ROOT_PASSWORD
+      SPRING_DATASOURCE_PASSWORD: root    # Must match MYSQL_ROOT_PASSWORD
       SERVER_PORT: 8089
       SERVER_SERVLET_CONTEXT_PATH: /api
     ports:
