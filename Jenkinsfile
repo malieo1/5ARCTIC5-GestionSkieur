@@ -62,12 +62,22 @@ pipeline {
                      }
 
                      stage('Deploy with Docker Compose') {
-                         steps {
-                             script {
-                                 sh "docker-compose -f docker-compose.yml up -d"
+                                 steps {
+                                     script {
+                                         // Stop existing containers
+                                         sh 'docker-compose down || true'
+
+                                         // Start the applications
+                                         sh 'docker-compose up -d'
+
+
+                                         sh 'sleep 30'
+
+                                         // Verify deployment
+                                         sh 'docker-compose ps'
+                                     }
+                                 }
                              }
-                         }
-                     }
 
 
 
