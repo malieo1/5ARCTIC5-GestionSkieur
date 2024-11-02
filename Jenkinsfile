@@ -61,21 +61,24 @@ pipeline {
                          }
                      }
 
-                    pipeline {
-                        agent any
-                        stages {
-                            stage('Compose Down') {
-                                steps {
-                                    sh 'docker compose down'
-                                }
-                            }
-                            stage('Compose Up') {
-                                steps {
-                                    sh 'docker compose up -d'
-                                }
-                            }
-                        }
-                    }
+
+                     stage('Docker Compose Down') {
+                                 steps {
+                                     script {
+                                         sh 'docker compose down || true'  // Use "|| true" to avoid failure if no containers are running
+                                     }
+                                 }
+                             }
+
+                             stage('Docker Compose Up') {
+                                 steps {
+                                     script {
+                                         sh 'docker compose up -d'
+                                     }
+                                 }
+                             }
+
+
 
 
 
