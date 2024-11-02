@@ -2,10 +2,9 @@ package tn.esprit.spring;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import tn.esprit.spring.entities.Piste;
 import tn.esprit.spring.entities.Color;
 import tn.esprit.spring.repositories.IPisteRepository;
@@ -18,7 +17,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class PisteServicesImplTest {
 
     @Mock
@@ -31,15 +29,8 @@ class PisteServicesImplTest {
 
     @BeforeEach
     void setUp() {
-        piste = new Piste(1L, "Blue Trail", Color.BLUE, 3000, 15, null);
-    }
-
-    @Test
-    void testRetrieveAllPistes() {
-        when(pisteRepository.findAll()).thenReturn(Arrays.asList(piste));
-        List<Piste> pistes = pisteServices.retrieveAllPistes();
-        assertEquals(1, pistes.size());
-        verify(pisteRepository, times(1)).findAll();
+        MockitoAnnotations.openMocks(this);
+        piste = new Piste(1L, "Green Slope", Color.GREEN, 1200, 15, null);
     }
 
     @Test
@@ -51,10 +42,12 @@ class PisteServicesImplTest {
     }
 
     @Test
-    void testRemovePiste() {
-        doNothing().when(pisteRepository).deleteById(piste.getNumPiste());
-        pisteServices.removePiste(piste.getNumPiste());
-        verify(pisteRepository, times(1)).deleteById(piste.getNumPiste());
+    void testRetrieveAllPistes() {
+        when(pisteRepository.findAll()).thenReturn(Arrays.asList(piste));
+        List<Piste> pistes = pisteServices.retrieveAllPistes();
+        assertEquals(1, pistes.size());
+        assertEquals(piste, pistes.get(0));
+        verify(pisteRepository, times(1)).findAll();
     }
 
     @Test
@@ -65,5 +58,10 @@ class PisteServicesImplTest {
         verify(pisteRepository, times(1)).findById(1L);
     }
 
-    // Additional tests can be added here for edge cases.
+    @Test
+    void testRemovePiste() {
+        doNothing().when(pisteRepository).deleteById(1L);
+        pisteServices.removePiste(1L);
+        verify(pisteRepository, times(1)).deleteById(1L);
+    }
 }
