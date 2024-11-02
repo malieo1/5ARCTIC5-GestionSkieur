@@ -61,23 +61,21 @@ pipeline {
                          }
                      }
 
-                     stage('Deploy with Docker Compose') {
-                                 steps {
-                                     script {
-                                         // Stop existing containers
-                                         sh 'docker-compose down || true'
-
-                                         // Start the applications
-                                         sh 'docker-compose up -d'
-
-
-                                         sh 'sleep 30'
-
-                                         // Verify deployment
-                                         sh 'docker-compose ps'
-                                     }
-                                 }
-                             }
+                    pipeline {
+                        agent any
+                        stages {
+                            stage('Compose Down') {
+                                steps {
+                                    sh 'docker compose down'
+                                }
+                            }
+                            stage('Compose Up') {
+                                steps {
+                                    sh 'docker compose up -d'
+                                }
+                            }
+                        }
+                    }
 
 
 
