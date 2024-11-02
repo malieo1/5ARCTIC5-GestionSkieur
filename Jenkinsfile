@@ -47,15 +47,16 @@ pipeline {
             }
         }
 
-      /*  stage('Building our image') {
+        stage('Building our image') {
             steps {
                 script {
-                    dockerImage = docker.build "${registry}:${RELEASE_VERSION}"
+                    def uniqueTag = "${RELEASE_VERSION}-${env.BUILD_NUMBER}"
+                    dockerImage = docker.build "${registry}:${uniqueTag}"
 
                 }
             }
-        }*/
-/*stage('Push to DockerHub') {
+        }
+stage('Push to DockerHub') {
    steps {
        script {
            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
@@ -64,7 +65,7 @@ pipeline {
            }
        }
    }
-}*/
+}
     }
 
     post {
