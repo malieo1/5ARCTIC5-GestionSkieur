@@ -62,13 +62,13 @@ pipeline {
                      }
 
                      stage('Deploy with Docker Compose') {
-                                 steps {
-                                     script {
-                                         // Run Docker Compose from the container
-                                         sh "docker run -d --name deployment-container --network host $DOCKER_IMAGE docker-compose up -d"
-                                     }
-                                 }
+                         steps {
+                             script {
+                                 sh "docker-compose -f docker-compose.yml up -d"
                              }
+                         }
+                     }
+
 
 
 
