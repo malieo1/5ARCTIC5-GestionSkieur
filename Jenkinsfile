@@ -73,16 +73,23 @@ pipeline {
                       }
                   }
               }
-              stage('Push to DockerHub') {
-                 steps {
-                     script {
-                         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                             sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-                             sh "docker push ${dockerImage.imageName()}"
-                         }
-                     }
+      stage('Login To Docker') {
+          steps {
+              script {
+                  withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                  sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                                    }
+                                }
                  }
-              }
+          }
+      stage('Push to DockerHub') {
+         steps {
+             script {
+                 sh "docker push farahdiouani/gestion-station-ski:latest"
+                     }
+               }
+      }
+
 
 
     }
