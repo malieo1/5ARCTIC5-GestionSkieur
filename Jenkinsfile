@@ -5,6 +5,13 @@ pipeline {
         SONARQUBE_ENV = 'SonarQube'  // Replace with your SonarQube environment name
         NEXUS_CREDENTIALS_ID = 'deploymentRepo'  // Nexus credentials ID in Jenkins
 
+        DOCKER_CREDENTIALS = credentials ('docker-hub-credentials')
+                RELEASE_VERSION = "1.0"
+                registry = "farahdiouani/gestion-station-ski"
+                registryCredential = 'docker-hub-credentials'
+                dockerImage = ''
+                IMAGE_TAG = "${RELEASE_VERSION}-${env.BUILD_NUMBER}"
+
     }
     stages {
         stage('Checkout') {
@@ -57,6 +64,25 @@ pipeline {
               sh "mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=deploymentRepo::default::http://192.168.33.10:8081/repository/maven-releases/"
           }
       }
+
+      stage('Build Image') {
+          steps {
+              script {
+                  dockerImage = docker.build "${registry}:${IMAGE_TAG}"
+
+                      }
+                  }
+              }
+              stage('Push to DockerHub') {
+                 steps {
+                     script {
+                         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                             sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                             sh "docker push ${dockerImage.imageName()}"
+                         }
+                     }
+                 }
+              }
 
 
     }
