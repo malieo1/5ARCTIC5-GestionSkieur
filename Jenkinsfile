@@ -67,21 +67,21 @@ pipeline {
            }
         }
         stage('Deploy with Docker Compose') {
-                    steps {
-                        script {
-                            // Stop existing containers
-                            sh 'docker-compose down || true'
+            steps {
+                script {
+                    // Stop existing containers
+                    sh 'docker compose down || true'
 
-                            // Start the applications
-                            sh 'docker-compose up -d'
+                    // Start the applications
+                    sh 'docker compose up -d'
 
+                    // Wait for services to initialize
+                    sh 'sleep 30'
 
-                            sh 'sleep 30'
-
-                            // Verify deployment
-                            sh 'docker-compose ps'
-                        }
-                    }
+                    // Verify deployment
+                    sh 'docker compose ps'
+                }
+            }
         }
     }
 
