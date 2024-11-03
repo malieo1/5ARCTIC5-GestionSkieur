@@ -85,7 +85,7 @@ pipeline {
       stage('Push to DockerHub') {
          steps {
              script {
-                 sh "docker push farahdiouani/gestion-station-ski:latest"
+                 sh "docker push ${dockerImage.imageName()}"
                      }
                }
       }
