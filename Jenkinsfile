@@ -8,6 +8,7 @@ pipeline {
         registry = "malekzahmoul20971/gestion-station-ski"
         registryCredential = 'docker-hub-credentials'
         dockerImage = ''
+        IMAGE_TAG = "${RELEASE_VERSION}-${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -50,8 +51,7 @@ pipeline {
         stage('Building our image') {
             steps {
                 script {
-                    def uniqueTag = "${RELEASE_VERSION}-${env.BUILD_NUMBER}"
-                    dockerImage = docker.build "${registry}:${uniqueTag}"
+                    dockerImage = docker.build "${registry}:${IMAGE_TAG}"
 
                 }
             }
