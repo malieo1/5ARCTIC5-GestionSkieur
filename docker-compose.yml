@@ -1,10 +1,14 @@
+version: '3.8'
+
 services:
   mysql:
     image: mysql:8.0
     container_name: mysql_db
     environment:
-      MYSQL_DATABASE: stationSki
-      MYSQL_ROOT_PASSWORD: root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=stationSki
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
     ports:
       - "3306:3306"
     volumes:
@@ -18,6 +22,7 @@ services:
   spring_app:
     image: rezguimedamine/gestion-station-ski:1.0
     container_name: gestion_station_ski
+    restart: on-failure
     depends_on:
       mysql:
         condition: service_healthy
