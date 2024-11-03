@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SkierServiceImplTest {
 
-   /* @InjectMocks
+    @InjectMocks
     private SkierServicesImpl skierService;
 
     @Mock
@@ -44,18 +44,6 @@ class SkierServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-    }*/
-
-   @Autowired
-   private SkierServicesImpl skierService;
-
-    @MockBean
-    private ISkierRepository skierRepository;
-
-    @BeforeEach
-    void setUp() {
-        // Clear the repository before each test to ensure clean state
-        skierRepository.deleteAll();
     }
 
     @Test
