@@ -56,16 +56,33 @@ pipeline {
                 }
             }
         }
-stage('Push to DockerHub') {
-   steps {
-       script {
-           withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-               sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-               sh "docker push ${dockerImage.imageName()}"
+        stage('Push to DockerHub') {
+           steps {
+               script {
+                   withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                       sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                       sh "docker push ${dockerImage.imageName()}"
+                   }
+               }
            }
-       }
-   }
-}
+        }
+        stage('Deploy with Docker Compose') {
+                    steps {
+                        script {
+                            // Stop existing containers
+                            sh 'docker-compose down || true'
+
+                            // Start the applications
+                            sh 'docker-compose up -d'
+
+
+                            sh 'sleep 30'
+
+                            // Verify deployment
+                            sh 'docker-compose ps'
+                        }
+                    }
+        }
     }
 
     post {
