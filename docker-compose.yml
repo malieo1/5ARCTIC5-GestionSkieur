@@ -29,3 +29,6 @@ services:
       SERVER_SERVLET_CONTEXT_PATH: /api
     ports:
       - "8089:8089"
+
+volumes:
+  mysql_data:
