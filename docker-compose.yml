@@ -1,40 +1,24 @@
-version: '3.8'
-
+version: "3.9"
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql_db
+
+  spring:
+    image: malekzahmoul20971/gestion-station-ski:${IMAGE_TAG}
+    restart: on-failure
+    ports:
+      - "8089:8089"
+    depends_on:
+      -  db-mysql
+
+  db-mysql:
+    image: "mysql:5.7"
+    restart: unless-stopped
     environment:
-      MYSQL_DATABASE: stationSki
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_DATABASE=stationski
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - app-network
-
-  spring_app:
-    image: malekzahmoul20971/gestion-station-ski:${IMAGE_TAG}
-    container_name: gestion_station_ski
-    depends_on:
-      - mysql
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db:3306/stationSki?createDatabaseIfNotExist=true&useSSL=false
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
-    ports:
-      - "8082:8082"
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+      - db:/var/lib/mysql
 
 volumes:
-  mysql_data:
+  db:
