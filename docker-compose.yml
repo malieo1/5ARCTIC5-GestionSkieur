@@ -13,7 +13,7 @@ services:
     volumes:
       - db:/var/lib/mysql
   spring-boot-app:
-    image: youssefmathlouthi/skiback
+    image: rezguimedamine/gestion-station-ski:1.0
     container_name: app-back
     ports:
       - "8089:8089"
