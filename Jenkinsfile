@@ -23,11 +23,11 @@ pipeline {
                 sh 'mvn clean'
             }
         }
-       /* stage('Test') {
+       stage('Test') {
             steps {
-                sh 'mvn test -Dspring.profiles.active=test'
+                sh 'mvn test '
             }
-        }*/
+        }
 
 
         stage('Build') {
