@@ -91,7 +91,7 @@ pipeline {
                                            // sh 'docker-compose exec spring_app /bin/sh'
                                        }
                                    }
-                               }g
+                               }
 
 
 
