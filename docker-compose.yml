@@ -24,7 +24,7 @@ services:
     restart: on-failure
     container_name: app-backend
     ports:
-      - "8082:8082"
+      - "8089:8089"
 
     environment:
       SPRING_APPLICATION_JSON: '{
