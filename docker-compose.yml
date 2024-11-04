@@ -1,30 +1,34 @@
-version: "3.8"
-
+version: '3'
 services:
-  mysqldb:
-    image: mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: stationSki
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+  mysql-db:
+    image: mysql:latest
+    container_name: docker-compose-mysql-db
     ports:
       - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=skidb
+    networks:
+      - my-network
     volumes:
       - db:/var/lib/mysql
-
-  spring_app:
-    depends_on:
-      - mysqldb
-    image: rezguimedamine/gestion-station-ski:1.0
-    restart: on-failure
+  spring-boot-app:
+    image: youssefmathlouthi/skiback
+    container_name: app-back
     ports:
-      - "8082:8089"
+      - "8089:8089"
+    depends_on:
+      - mysql-db
     environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://docker-compose-mysql-db:3306/skidb?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - my-network
+    restart: always
 
+networks:
+  my-network:
 
 volumes:
-  db:
+  db :
