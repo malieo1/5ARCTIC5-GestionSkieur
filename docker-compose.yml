@@ -20,7 +20,7 @@ services:
       - mysql
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/stationSki?createDatabaseIfNotExist=true&useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db:3306/stationSki?createDatabaseIfNotExist=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
