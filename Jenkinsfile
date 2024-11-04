@@ -41,19 +41,7 @@ pipeline {
             }
         }
 
-        stage('Remove Docker Image') {
-            steps {
-                script {
-                    def imageExists = sh(script: "docker images -q youssefmathlouthi/skiback", returnStatus: true) == 0
-                    if (imageExists) {
-                        echo 'Suppression de l\'image Docker :'
-                        sh 'docker rmi youssefmathlouthi/skiback'
-                    } else {
-                        echo 'L\'image Docker n\'existe pas, aucune suppression nécessaire.'
-                    }
-                }
-            }
-        }
+
         stage('Build Docker Image') {
             steps {
                 echo 'Création de l\'image Docker :'
