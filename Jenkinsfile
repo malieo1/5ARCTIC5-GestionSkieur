@@ -1,34 +1,65 @@
 pipeline {
     agent any
+
     stages {
-            stage('Checkout') {
-                steps {
-                    git branch: 'master',
-                    url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git';
-                }
+        stage('Git') {
+            steps {
+                echo 'Récupération du Code de Git :'
+                git(
+                    branch: 'MohamedYoussefMathlouthi-5arctic5',
+                    url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git',
+                    credentialsId: 'github_token'
+                )
             }
-             stage('Build') {
-                  steps {
-                      sh 'mvn install -Dmaven.test.skip=true'
-                  }
-             }
-             stage('Test') {
-                         steps {
-                             sh 'mvn test'
-                         }
-                     }
+        }
 
+        stage('Maven Clean') {
+            steps {
+                echo 'Nettoyage du Projet :'
+                sh 'mvn clean package'
+            }
+        }
 
-                 }
+        stage('Maven Compile') {
+            steps {
+                echo 'Compilation du Projet :'
+                sh 'mvn compile'
+            }
+        }
 
-                 post {
-                     success {
-                         echo 'Build finished successfully!'
-                     }
-                     failure {
-                         echo 'Build failed!'
-                     }
-                 }
+        stage('Test') {
+            steps {
+                echo 'Exécution des tests unitaires :'
+                sh 'mvn test'
+            }
+        }
 
+        stage('Docker Compose Down') {
+            steps {
+                echo 'Arrêt des services Docker :'
+                sh 'docker compose down'
+            }
+        }
 
+        stage('Remove Docker Image') {
+            steps {
+                echo 'Suppression de l\'image Docker :'
+                sh 'docker rmi youssefmathlouthi/skiback'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Création de l\'image Docker :'
+                sh 'docker build -t youssefmathlouthi/skiback .'
+            }
+        }
+
+        stage('Docker Compose Up') {
+            steps {
+                echo 'Démarrage des services avec Docker Compose :'
+                sh 'docker compose up -d'
+            }
+        }
+    }
 }
