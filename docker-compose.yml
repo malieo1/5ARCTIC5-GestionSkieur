@@ -1,39 +1,31 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql_db
+  mysqldb:
+    image: mysql
+    restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=stationSki
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stationSki
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "mysql"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      - db:/var/lib/mysql
 
-  spring_app:
-    image: rezguimedamine/gestion-station-ski:1.0
-    container_name: gestion_station_ski
-    restart: on-failure
+  kaddem-backend:
     depends_on:
-      mysql:
-        condition: service_healthy
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/stationSki?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      SERVER_PORT: 8089
-      SERVER_SERVLET_CONTEXT_PATH: /api
+      - mysqldb
+    image: rezguimedamine/gestion-station-ski:1.0
+    restart: on-failure
     ports:
-      - "8089:8089"
+      - "8082:8089"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/stationSki?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
 
 volumes:
-  mysql_data:
+  db:

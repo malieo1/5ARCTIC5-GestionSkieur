@@ -62,18 +62,20 @@ pipeline {
                      }
 
 
-                     stage('Docker Compose Down') {
+                      stage('Deploy with Docker Compose') {
                                  steps {
                                      script {
-                                         sh 'docker compose down || true'  // Use "|| true" to avoid failure if no containers are running
-                                     }
-                                 }
-                             }
+                                         // Stop existing containers
+                                         sh 'docker-compose down || true'
 
-                             stage('Docker Compose Up') {
-                                 steps {
-                                     script {
-                                         sh 'docker compose up -d'
+                                         // Start the applications
+                                         sh 'docker-compose up -d'
+
+
+                                         sh 'sleep 30'
+
+                                         // Verify deployment
+                                         sh 'docker-compose ps'
                                      }
                                  }
                              }
