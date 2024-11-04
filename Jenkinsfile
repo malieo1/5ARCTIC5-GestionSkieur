@@ -17,6 +17,18 @@ pipeline {
                 git branch: 'malekzahmoul-5arctic5', url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
             }
         }
+        stage('Clean') {
+            steps {
+                echo 'Cleaning the workspace...'
+                sh 'mvn clean'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test -Dspring.profiles.active=test'
+            }
+        }
+
 
         stage('Build') {
             steps {
@@ -31,12 +43,6 @@ pipeline {
                         mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.ws.timeout=120
                     '''
                 }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test -Dspring.profiles.active=test'
             }
         }
 
