@@ -15,11 +15,24 @@ pipeline {
                     url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git';
                 }
             }
-             stage('Build') {
-                         steps {
-                            sh 'mvn clean install -DskipTests'
-                         }
-                     }
+            stage('Clean') {
+                        steps {
+                            echo 'Cleaning the workspace...'
+                            sh 'mvn clean'
+                        }
+                    }
+              stage('Package') {
+                                 steps {
+                                     echo 'Packaging the application...'
+                                     sh 'mvn package'
+                                 }
+                             }
+               stage('Build') {
+                           steps {
+                               echo 'Building the project...'
+                               sh 'mvn install -Dmaven.test.skip=true'
+                           }
+                       }
          /*  stage('Test') {
                         steps {
                             sh 'mvn test'
