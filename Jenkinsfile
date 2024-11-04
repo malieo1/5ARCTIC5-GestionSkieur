@@ -16,10 +16,10 @@ pipeline {
                 }
             }
              stage('Build') {
-                  steps {
-                      sh 'mvn install -Dmaven.test.skip=true'
-                  }
-             }
+                         steps {
+                            sh 'mvn clean install -DskipTests'
+                         }
+                     }
          /*  stage('Test') {
                         steps {
                             sh 'mvn test'
