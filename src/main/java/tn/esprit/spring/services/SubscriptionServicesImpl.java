@@ -60,7 +60,7 @@ public class SubscriptionServicesImpl implements ISubscriptionServices{
     }
 
     @Override
-    @Scheduled(cron = "*/30 * * * * *") /* Cron expression to run a job every 30 secondes */
+   // @Scheduled(cron = "*/30 * * * * *") /* Cron expression to run a job every 30 secondes */
     public void retrieveSubscriptions() {
         for (Subscription sub: subscriptionRepository.findDistinctOrderByEndDateAsc()) {
             Skier   aSkier = skierRepository.findBySubscription(sub);
