@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE_ENV = 'SonarQube'  // Replace with your SonarQube environment name
+        SONARQUBE_ENV = 'SonarQube'  // SonarQube environment name
         NEXUS_CREDENTIALS_ID = 'deploymentRepo'  // Nexus credentials ID in Jenkins
 
         DOCKER_CREDENTIALS = credentials ('docker-hub-credentials')
