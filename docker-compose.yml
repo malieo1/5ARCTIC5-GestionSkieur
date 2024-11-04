@@ -21,11 +21,10 @@ services:
     ports:
       - "8082:8089"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/stationSki?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+
 
 volumes:
   db:
