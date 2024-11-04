@@ -13,7 +13,7 @@ services:
     volumes:
       - db:/var/lib/mysql
 
-  kaddem-backend:
+  spring_app:
     depends_on:
       - mysqldb
     image: rezguimedamine/gestion-station-ski:1.0

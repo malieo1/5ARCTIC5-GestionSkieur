@@ -80,6 +80,19 @@ pipeline {
                                  }
                              }
 
+                       stage('Troubleshoot Deployment') {
+                                   steps {
+                                       script {
+                                           // Get logs from all services
+                                           sh 'docker-compose logs'
+
+                                           // Optionally, open a shell in the Spring app container for interactive troubleshooting
+                                           // Uncomment the next line if you want to drop into a shell
+                                           // sh 'docker-compose exec spring_app /bin/sh'
+                                       }
+                                   }
+                               }g
+
 
 
 
