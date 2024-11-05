@@ -8,6 +8,9 @@ pipeline {
         NEXUS_CREDENTIAL_ID = "admin" // Ensure this is set up in Jenkins credentials
     }
 
+
+
+
     stages {
         stage('Git') {
             steps {
