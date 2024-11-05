@@ -50,7 +50,7 @@ pipeline {
              stage('Deploy to Nexus') {
                         steps {
                             withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                                sh "mvn deploy -Dmaven.test.skip=true"
+                                sh "mvn deploy -Dmaven.test.skip=true "
                             }
                         }
                     }
@@ -75,7 +75,7 @@ pipeline {
                      }
 
 
-                      stage('Deploy with Docker Compose') {
+                   /*   stage('Deploy with Docker Compose') {
                                  steps {
                                      script {
                                          // Stop existing containers
@@ -91,7 +91,7 @@ pipeline {
                                          sh 'docker-compose ps'
                                      }
                                  }
-                             }
+                             } */
 
                        stage('Troubleshoot Deployment') {
                                    steps {
