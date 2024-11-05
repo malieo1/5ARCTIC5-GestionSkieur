@@ -75,7 +75,7 @@ pipeline {
                      }
 
 
-                   /*   stage('Deploy with Docker Compose') {
+                     stage('Deploy with Docker Compose') {
                                  steps {
                                      script {
                                          // Stop existing containers
@@ -91,7 +91,7 @@ pipeline {
                                          sh 'docker-compose ps'
                                      }
                                  }
-                             } */
+                             }
 
                        stage('Troubleshoot Deployment') {
                                    steps {
