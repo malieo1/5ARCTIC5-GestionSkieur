@@ -31,19 +31,26 @@ public class SkierServicesImpl implements ISkierServices {
 
     @Override
     public Skier addSkier(Skier skier) {
-        switch (skier.getSubscription().getTypeSub()) {
-            case ANNUAL:
-                skier.getSubscription().setEndDate(skier.getSubscription().getStartDate().plusYears(1));
-                break;
-            case SEMESTRIEL:
-                skier.getSubscription().setEndDate(skier.getSubscription().getStartDate().plusMonths(6));
-                break;
-            case MONTHLY:
-                skier.getSubscription().setEndDate(skier.getSubscription().getStartDate().plusMonths(1));
-                break;
+        Subscription subscription = skier.getSubscription();
+
+        // Check if subscription exists before processing
+        if (subscription != null && subscription.getTypeSub() != null) {
+            switch (subscription.getTypeSub()) {
+                case ANNUAL:
+                    subscription.setEndDate(subscription.getStartDate().plusYears(1));
+                    break;
+                case SEMESTRIEL:
+                    subscription.setEndDate(subscription.getStartDate().plusMonths(6));
+                    break;
+                case MONTHLY:
+                    subscription.setEndDate(subscription.getStartDate().plusMonths(1));
+                    break;
+            }
         }
+
         return skierRepository.save(skier);
     }
+
 
     @Override
     public Skier assignSkierToSubscription(Long numSkier, Long numSubscription) {
