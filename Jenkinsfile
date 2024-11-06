@@ -5,6 +5,7 @@ pipeline {
         SONARQUBE_TOKEN = credentials('sonar-token')
         NEXUS_CREDENTIALS_ID = 'nexus'
         NEXUS_URL = 'http://192.168.33.10:8081/repository/maven-releases/'
+        DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
     }
     stages {
         stage('Checkout') {
@@ -75,6 +76,30 @@ pipeline {
                 }
             }
         }
+
+         stage('Login to Docker') {
+                    steps {
+                        echo 'Logging to DockerHub...'
+                        script {
+                            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                                sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                                echo 'DockerHub login successful.'
+                            }
+                        }
+                        echo 'Login to DockerHub stage completed.'
+                    }
+                }
+
+                stage('Push to DockerHub') {
+                    steps {
+                        echo 'Pushing to DockerHub...'
+                        script {
+                            sh "docker push wadhahdaoud/skiback:latest"
+                            echo "Docker image pushed: wadhahdaoud/skiback:latest"
+                        }
+                        echo 'Push to DockerHub stage completed.'
+                    }
+                }
 
         stage('Docker Compose Down') {
             steps {
