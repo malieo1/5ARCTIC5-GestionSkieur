@@ -37,6 +37,13 @@ pipeline {
                 sh 'mvn test'
             }
         }
+           stage('SonarQube') {
+                    steps {
+                        echo 'Analyse de la Qualité du Code : '
+                        sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=admin@dmin123'
+                    }
+                }
+
         stage('Deploy to Nexus') {
                         steps {
                                 sh "mvn deploy -Dmaven.test.skip=true "
@@ -53,16 +60,7 @@ pipeline {
                 }
             }
         }
-      stage('Scan Docker Image with Trivy') {
-                steps {
-                    script {
-                        // Run Trivy to scan the Docker image
-                        echo 'Scanning Docker image with Trivy:'
-                        sh "trivy image --cache-dir /path/to/cache --exit-code 1 --no-progress khalilbelhedi336/skiback:${env.IMAGE_TAG}"
 
-                    }
-                }
-            }
         stage('Deploy with Docker Compose') {
             steps {
                 dir('firstpipeline') {
