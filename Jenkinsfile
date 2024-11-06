@@ -5,10 +5,8 @@ pipeline {
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "192.168.50.4:8081"
         NEXUS_REPOSITORY = "maven-releases"
-        NEXUS_CREDENTIAL_ID = "admin" // Ensure this is set up in Jenkins credentials
+        NEXUS_CREDENTIAL_ID = "admin"
     }
-
-
 
     stages {
         stage('Git') {
@@ -40,26 +38,13 @@ pipeline {
             }
         }
 
-        stage('Remove Old Docker Image') {
-            steps {
-                script {
-                    sh 'docker rmi -f khalilbelhedi336/skiback:latest || true' // `-f` forces removal, and `|| true` ignores errors
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t khalilbelhedi336/skiback .'
-                }
-            }
-        }
-
-        stage('Docker Compose Down') {
-            steps {
-                dir('firstpipeline') {
-                    sh 'docker compose down'
+                    // Utiliser l'ID de commit comme tag pour l'image
+                    def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    sh "docker build -t khalilbelhedi336/skiback:${commitId} ."
+                    env.IMAGE_TAG = commitId // Stocke l'ID de commit comme tag d'image
                 }
             }
         }
@@ -67,19 +52,10 @@ pipeline {
         stage('Deploy with Docker Compose') {
             steps {
                 dir('firstpipeline') {
-                    sh 'docker compose up -d'
+                    sh 'docker compose down'
+                    sh "IMAGE_TAG=${env.IMAGE_TAG} docker compose up -d"
                 }
             }
         }
-
-
-
-        // stage('Final Docker Compose Down') { // Only include if shutdown is desired at the end
-        //     steps {
-        //         dir('firstpipeline') {
-        //             sh 'docker compose down'
-        //         }
-        //     }
-        // }
     }
 }

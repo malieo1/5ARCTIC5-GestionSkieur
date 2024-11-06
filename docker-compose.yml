@@ -12,8 +12,9 @@ services:
       - my-network
     volumes:
       - db:/var/lib/mysql
+
   spring-boot-app:
-    image: khalilbelhedi336/skiback
+    image: khalilbelhedi336/skiback:${IMAGE_TAG} # Utilisation de la variable d'environnement IMAGE_TAG
     container_name: app-back
     ports:
       - "8089:8089"
@@ -31,4 +32,4 @@ networks:
   my-network:
 
 volumes:
-  db :
+  db:
