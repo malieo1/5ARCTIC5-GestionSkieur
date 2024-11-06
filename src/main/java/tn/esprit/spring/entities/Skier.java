@@ -50,5 +50,4 @@ public class Skier implements Serializable {
 
 
 
-
 }

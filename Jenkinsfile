@@ -100,12 +100,10 @@ pipeline {
                        stage('Troubleshoot Deployment') {
                                    steps {
                                        script {
-                                           // Get logs from all services
+
                                            sh 'docker-compose logs'
 
-                                           // Optionally, open a shell in the Spring app container for interactive troubleshooting
-                                           // Uncomment the next line if you want to drop into a shell
-                                           // sh 'docker-compose exec spring_app /bin/sh'
+
                                        }
                                    }
                                }
@@ -121,20 +119,20 @@ pipeline {
 
 
 
- post {
-        success {
-            echo 'Build finished successfully!'
-            mail to: 'darkamin22@gmail.com',
-                 subject: "Jenkins Job Successful: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
-                 body: "Good news Si Anas! The job ${env.JOB_NAME} [${env.BUILD_NUMBER}] has finished successfully."
-        }
-        failure {
-            echo 'Build failed!'
-            mail to: 'darkamin22@gmail.com',
-                 subject: "Jenkins Job Failed: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
-                 body: "Sorry Si anas ,the job ${env.JOB_NAME} [${env.BUILD_NUMBER}] has failed. Please check the Jenkins console output for details."
-        }
-
+post {
+    success {
+        echo 'Build finished successfully!'
+        mail to: 'darkamin22@gmail.com',
+             subject: "Jenkins Job Successful: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+             body: "Good news Si amin! The job ${env.JOB_NAME} [${env.BUILD_NUMBER}] has finished successfully."
+    }
+    failure {
+        echo 'Build failed!'
+        mail to: 'darkamin22@gmail.com',
+             subject: "Jenkins Job Failed: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+             body: "Sorry Si amin, the job ${env.JOB_NAME} [${env.BUILD_NUMBER}] has failed. Please check the Jenkins console output for details."
+    }
 }
+
 
 }
