@@ -35,11 +35,11 @@ pipeline {
                                sh 'mvn install -Dmaven.test.skip=true'
                            }
                        }
-         /*  stage('Test') {
+           stage('Test') {
                         steps {
                             sh 'mvn test'
                          }
-                     }*/
+                     }
 
             stage('MVN Sonarqube') {
                                steps {
@@ -49,13 +49,13 @@ pipeline {
                                }
                            }
 
-         /*    stage('Deploy to Nexus') {
+            stage('Deploy to Nexus') {
                         steps {
                             withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                                 sh "mvn deploy -Dmaven.test.skip=true "
                             }
                         }
-                    }*/
+                    }
 
 
                     stage('Building our image') {
