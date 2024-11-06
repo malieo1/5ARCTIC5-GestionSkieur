@@ -32,10 +32,7 @@ services:
         "spring.datasource.username" : "root",
         "spring.datasource.password" : null,
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
-        "spring.jpa.hibernate.ddl-auto" : "update",
-        "management.endpoints.web.exposure.include":"*",
-        "management.endpoint.prometheus.enabled":"true",
-        "management.endpoints.web.base-path":"/actuator"
+        "spring.jpa.hibernate.ddl-auto" : "update"
         
       }'
     stdin_open: true
