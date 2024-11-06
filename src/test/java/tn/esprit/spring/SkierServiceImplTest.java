@@ -95,4 +95,12 @@ class SkierServiceImplTest {
         verify(skierRepository).save(any(Skier.class));
     }
 
+    @Test
+    @Order(3)
+    void testRemoveSkier() {
+        skierService.removeSkier(1L);
+
+        verify(skierRepository, times(1)).deleteById(1L);
+    }
+
 }

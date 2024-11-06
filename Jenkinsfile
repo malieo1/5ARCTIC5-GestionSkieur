@@ -37,15 +37,18 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                    sh '''
-                        mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.ws.timeout=120
-                    '''
-                }
-            }
-        }
+       stage('SonarQube Analysis') {
+           steps {
+               withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                   sh '''
+                       mvn sonar:sonar \
+                       -Dsonar.login=$SONAR_TOKEN \
+                       -Dsonar.ws.timeout=120 \
+                       -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                   '''
+               }
+           }
+       }
 
         stage('Deploy to Nexus') {
             steps {
