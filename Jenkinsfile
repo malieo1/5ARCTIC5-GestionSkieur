@@ -39,30 +39,13 @@ pipeline {
                 }
             }
         }
-       stage('Deploy to Nexus') {
-           steps {
-               script {
-                   echo 'Deploying .jar and .pom to Nexus Repository:'
-
-                   // Define artifact name based on commit ID
-                   def jarFile = "target/gestion-station-ski-${env.COMMIT_ID}.jar"
-
-                   // Deploy using Maven with both .pom and .jar
-                   sh """
-                       mvn deploy:deploy-file \
-                       -Dfile=${jarFile} \
-                       -DpomFile=pom.xml \
-                       -DgroupId=tn.esprit.spring \
-                       -DartifactId=gestion-station-ski \
-                       -Dversion=1.0-${env.COMMIT_ID} \
-                       -Dpackaging=jar \
-                       -DrepositoryId=${NEXUS_CREDENTIAL_ID} \
-                       -Durl=${NEXUS_PROTOCOL}://${NEXUS_URL}/repository/${NEXUS_REPOSITORY}
-                   """
-               }
-           }
-       }
-
+     stage('Deploy to Nexus') {
+                             steps {
+                             script {
+                                     sh "mvn deploy -Dmaven.test.skip=true "
+                                 }
+                             }
+                         }
 
 
         stage('Deploy with Docker Compose') {
