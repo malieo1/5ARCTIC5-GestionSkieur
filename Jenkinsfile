@@ -5,10 +5,10 @@ pipeline {
             // Nexus credentials
             NEXUS_CREDENTIALS = credentials('nexus-credentials')
             DOCKER_CREDENTIALS = credentials('docker-credentials')
-            registry = 'rezguimedamine/gestion-station-ski'
+            registry = "rezguimedamine/gestion-station-ski"
             RELEASE_VERSION = "1.0"
             dockerImage = ''
-            IMAGE_TAG = "${RELEASE_VERSION}-${env.BUILD_NUMBER}"
+            MAGE_TAG = "${RELEASE_VERSION}-${env.BUILD_NUMBER}"
         }
     stages {
             stage('Checkout') {
@@ -57,22 +57,20 @@ pipeline {
                         }
                     }*/
 
-          stage('Build Docker Image') {
-              steps {
-                  script {
-                      echo "Registry: ${registry}"
-                      echo "Image Tag: ${IMAGE_TAG}"
-                      echo "Starting Docker build..."
-                      dockerImage = docker.build("${registry}:${IMAGE_TAG}")
-                  }
-              }
-          }
+             stage('Building our image') {
+                         steps {
+                             script {
+                                 dockerImage = docker.build "${registry}:${IMAGE_TAG}"
+
+                             }
+                         }
+
                      stage('Push to DockerHub') {
                          steps {
                              script {
                                  withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                                      sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-                                        sh "docker push ${dockerImage.imageName()}"
+                                     sh "docker push ${dockerImage.imageName()}"
                                  }
                              }
                          }
