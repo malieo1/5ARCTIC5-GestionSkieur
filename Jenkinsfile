@@ -11,48 +11,54 @@ pipeline {
     stages {
         stage('Git') {
             steps {
-                echo 'Fetching Code from Git:'
+                echo 'Recup Code de Git:'
                 git branch: 'khalilbelhedi-5arctic5',
                     url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
             }
         }
 
-        stage('Maven Clean and Package') {
+        stage('Maven Clean') {
             steps {
-                script {
-                    echo 'Cleaning and Building Project:'
-                    def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    env.COMMIT_ID = commitId
-
-                    // Build the jar with the commit ID as part of the version
-                    sh "mvn clean package -Drevision=${commitId}"
-                    sh 'ls target'
-
-                }
+                echo 'Nettoyage du Projet:'
+                sh 'mvn clean package'
             }
         }
 
+        stage('Maven Compile') {
+            steps {
+                echo 'Construction du Projet:'
+                sh 'mvn compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Execution des Tests:'
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy to Nexus') {
+                        steps {
+                                sh "mvn deploy -Dmaven.test.skip=true "
+                            }
+                        }
+                    }
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t khalilbelhedi336/skiback:${env.COMMIT_ID} ."
+                    // Utiliser l'ID de commit comme tag pour l'image
+                    def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    sh "docker build -t khalilbelhedi336/skiback:${commitId} ."
+                    env.IMAGE_TAG = commitId // Stocke l'ID de commit comme tag d'image
                 }
             }
         }
-     stage('Deploy to Nexus') {
-                             steps {
-                             script {
-                                     sh "mvn deploy -Dmaven.test.skip=true "
-                                 }
-                             }
-                         }
-
 
         stage('Deploy with Docker Compose') {
             steps {
                 dir('firstpipeline') {
                     sh 'docker compose down'
-                    sh "IMAGE_TAG=${env.COMMIT_ID} docker compose up -d"
+                    sh "IMAGE_TAG=${env.IMAGE_TAG} docker compose up -d"
                 }
             }
         }
