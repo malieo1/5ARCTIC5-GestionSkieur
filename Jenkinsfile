@@ -40,7 +40,7 @@ pipeline {
            stage('SonarQube') {
                     steps {
                         echo 'Analyse de la Qualité du Code : '
-                        sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=admin@dmin123'
+                        sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Admin@dmin123'
                     }
                 }
 
