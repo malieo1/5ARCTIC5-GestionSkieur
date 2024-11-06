@@ -11,7 +11,7 @@ import tn.esprit.spring.services.ISubscriptionServices;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @Tag(name = "\uD83D\uDC65 Subscription Management")
 @RestController
 @RequestMapping("/subscription")
