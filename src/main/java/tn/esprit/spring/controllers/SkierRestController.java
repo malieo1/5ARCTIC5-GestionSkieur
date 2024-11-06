@@ -10,6 +10,7 @@ import tn.esprit.spring.services.ISkierServices;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @Tag(name = "\uD83C\uDFC2 Skier Management")
 @RestController
 @RequestMapping("/skier")
