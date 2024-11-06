@@ -42,7 +42,7 @@ pipeline {
                                 sh "mvn deploy -Dmaven.test.skip=true "
                             }
                         }
-                    }
+
         stage('Build Docker Image') {
             steps {
                 script {
