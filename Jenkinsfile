@@ -12,7 +12,12 @@ pipeline {
                 )
             }
         }
-
+        stage('Maven install') {
+            steps {
+                echo 'install :'
+                sh 'mvn install'
+            }
+        }
         stage('Maven Clean') {
             steps {
                 echo 'Nettoyage du Projet :'
@@ -42,13 +47,21 @@ pipeline {
         }
 
 
+         stage('Remove Old Docker Image') {
+                    steps {
+                        script {
+                            // Supprime l'image Docker existante si elle existe
+                            sh 'docker rmi -f youssefmathlouthi/skiback:latest || true'
+                        }
+                    }
+                }
         stage('Build Docker Image') {
-            steps {
-                echo 'Création de l\'image Docker :'
-                sh 'docker build -t youssefmathlouthi/skiback .'
-            }
-        }
-
+                    steps {
+                        script {
+                            sh 'docker build -t youssefmathlouthi/skiback .'
+                        }
+                    }
+                }
         stage('Docker Compose Up') {
             steps {
                 echo 'Démarrage des services avec Docker Compose :'
