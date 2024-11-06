@@ -38,6 +38,17 @@ pipeline {
                 sh 'mvn test'
             }
         }
+        stage('SonarQube') {
+                            steps {
+                                echo 'Analyse de la Qualité du Code : '
+                                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Admin@dmin123'
+                            }
+                        }
+        stage('Deploy to Nexus') {
+                        steps {
+                                sh "mvn deploy -Dmaven.test.skip=true "
+                            }
+                        }
 
         stage('Docker Compose Down') {
             steps {
@@ -68,5 +79,13 @@ pipeline {
                 sh 'docker compose up -d'
             }
         }
+        stage('restarting prometheus & grafana') {
+                    steps {
+                        echo 'Containers restarted :'
+                        sh 'docker restart prometheus '
+                        sh 'docker restart grafana '
+                    }
+                }
     }
+
 }
