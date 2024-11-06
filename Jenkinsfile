@@ -53,7 +53,15 @@ pipeline {
                 }
             }
         }
-
+      stage('Scan Docker Image with Trivy') {
+                steps {
+                    script {
+                        // Run Trivy to scan the Docker image
+                        echo 'Scanning Docker image with Trivy:'
+                        sh "trivy image --exit-code 1 --no-progress khalilbelhedi336/skiback:${env.IMAGE_TAG}"
+                    }
+                }
+            }
         stage('Deploy with Docker Compose') {
             steps {
                 dir('firstpipeline') {
