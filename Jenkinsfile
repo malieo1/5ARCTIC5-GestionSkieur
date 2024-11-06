@@ -5,46 +5,57 @@ pipeline {
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "192.168.50.4:8081"
         NEXUS_REPOSITORY = "maven-releases"
-        NEXUS_CREDENTIAL_ID = "admin"
+        NEXUS_CREDENTIAL_ID = "admin" // Set this in Jenkins credentials for Nexus access
     }
 
     stages {
         stage('Git') {
             steps {
-                echo 'Recup Code de Git:'
+                echo 'Fetching Code from Git:'
                 git branch: 'khalilbelhedi-5arctic5',
                     url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
             }
         }
 
-        stage('Maven Clean') {
+        stage('Maven Clean and Package') {
             steps {
-                echo 'Nettoyage du Projet:'
-                sh 'mvn clean package'
-            }
-        }
+                script {
+                    echo 'Cleaning and Building Project:'
+                    // Get the Git commit ID to use as part of the artifact version
+                    def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 
-        stage('Maven Compile') {
-            steps {
-                echo 'Construction du Projet:'
-                sh 'mvn compile'
-            }
-        }
+                    // Set the commit ID as an environment variable for use in later stages
+                    env.COMMIT_ID = commitId
 
-        stage('Test') {
-            steps {
-                echo 'Execution des Tests:'
-                sh 'mvn test'
+                    // Use the commit ID to tag the build
+                    sh "mvn clean package -Drevision=${commitId}"
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Utiliser l'ID de commit comme tag pour l'image
-                    def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    sh "docker build -t khalilbelhedi336/skiback:${commitId} ."
-                    env.IMAGE_TAG = commitId // Stocke l'ID de commit comme tag d'image
+                    // Build Docker image with the commit ID as the tag
+                    sh "docker build -t khalilbelhedi336/skiback:${env.COMMIT_ID} ."
+                }
+            }
+        }
+
+        stage('Deploy to Nexus') {
+            steps {
+                script {
+                    echo 'Deploying .jar to Nexus Repository:'
+                    sh """
+                        mvn deploy:deploy-file \
+                        -Dfile=target/your-artifact-${env.COMMIT_ID}.jar \
+                        -DgroupId=com.example \
+                        -DartifactId=your-artifact \
+                        -Dversion=1.0-${env.COMMIT_ID} \
+                        -Dpackaging=jar \
+                        -DrepositoryId=${NEXUS_CREDENTIAL_ID} \
+                        -Durl=${NEXUS_PROTOCOL}://${NEXUS_URL}/repository/${NEXUS_REPOSITORY}
+                    """
                 }
             }
         }
@@ -53,7 +64,7 @@ pipeline {
             steps {
                 dir('firstpipeline') {
                     sh 'docker compose down'
-                    sh "IMAGE_TAG=${env.IMAGE_TAG} docker compose up -d"
+                    sh "IMAGE_TAG=${env.COMMIT_ID} docker compose up -d"
                 }
             }
         }
