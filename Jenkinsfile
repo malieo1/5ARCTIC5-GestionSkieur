@@ -5,7 +5,7 @@ pipeline {
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "192.168.50.4:8081"
         NEXUS_REPOSITORY = "maven-releases"
-        NEXUS_CREDENTIAL_ID = "admin" // Set this in Jenkins credentials for Nexus access
+        NEXUS_CREDENTIAL_ID = "admin"
     }
 
     stages {
@@ -21,13 +21,10 @@ pipeline {
             steps {
                 script {
                     echo 'Cleaning and Building Project:'
-                    // Get the Git commit ID to use as part of the artifact version
                     def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-
-                    // Set the commit ID as an environment variable for use in later stages
                     env.COMMIT_ID = commitId
 
-                    // Use the commit ID to tag the build
+                    // Build the jar with the commit ID as part of the version
                     sh "mvn clean package -Drevision=${commitId}"
                 }
             }
@@ -36,7 +33,6 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image with the commit ID as the tag
                     sh "docker build -t khalilbelhedi336/skiback:${env.COMMIT_ID} ."
                 }
             }
@@ -46,11 +42,16 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying .jar to Nexus Repository:'
+
+                    // Define the expected artifact path
+                    def jarFile = "target/gestion-station-ski-${env.COMMIT_ID}.jar"
+
+                    // Deploy using Maven with the actual jar file name
                     sh """
                         mvn deploy:deploy-file \
-                        -Dfile=target/your-artifact-${env.COMMIT_ID}.jar \
-                        -DgroupId=com.example \
-                        -DartifactId=your-artifact \
+                        -Dfile=${jarFile} \
+                        -DgroupId=tn.esprit.spring \
+                        -DartifactId=gestion-station-ski \
                         -Dversion=1.0-${env.COMMIT_ID} \
                         -Dpackaging=jar \
                         -DrepositoryId=${NEXUS_CREDENTIAL_ID} \
