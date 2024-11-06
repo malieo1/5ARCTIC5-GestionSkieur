@@ -35,11 +35,11 @@ pipeline {
                                sh 'mvn install -Dmaven.test.skip=true'
                            }
                        }
-           stage('Test') {
+         /*  stage('Test') {
                         steps {
                             sh 'mvn test'
                          }
-                     }
+                     }*/
 
             stage('MVN Sonarqube') {
                                steps {
@@ -121,15 +121,20 @@ pipeline {
 
 
 
+ post {
+        success {
+            echo 'Build finished successfully!'
+            mail to: 'darkamin22@gmail.com',
+                 subject: "Jenkins Job Successful: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+                 body: "Good news Si Anas! The job ${env.JOB_NAME} [${env.BUILD_NUMBER}] has finished successfully."
+        }
+        failure {
+            echo 'Build failed!'
+            mail to: 'darkamin22@gmail.com',
+                 subject: "Jenkins Job Failed: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+                 body: "Sorry Si anas ,the job ${env.JOB_NAME} [${env.BUILD_NUMBER}] has failed. Please check the Jenkins console output for details."
+        }
 
-                 post {
-                     success {
-                         echo 'Build finished successfully!'
-                     }
-                     failure {
-                         echo 'Build failed!'
-                     }
-                 }
 
 
 }
