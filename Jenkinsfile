@@ -44,14 +44,14 @@ pipeline {
                     echo 'Deploying .jar to Nexus Repository:'
 
                     // Define the expected artifact path
-                    def jarFile = "target/gestion-station-ski-${env.COMMIT_ID}.jar"
+                    def jarFile = "target/\5ARCTIC5-GestionSkieur-${env.COMMIT_ID}.jar"
 
                     // Deploy using Maven with the actual jar file name
                     sh """
                         mvn deploy:deploy-file \
                         -Dfile=${jarFile} \
                         -DgroupId=tn.esprit.spring \
-                        -DartifactId=gestion-station-ski \
+                        -DartifactId=\5ARCTIC5-GestionSkieur \
                         -Dversion=1.0-${env.COMMIT_ID} \
                         -Dpackaging=jar \
                         -DrepositoryId=${NEXUS_CREDENTIAL_ID} \
