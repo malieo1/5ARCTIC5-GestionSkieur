@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    environment{
+    DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
+
+
+
+    }
 
     stages {
         stage('Git') {
@@ -73,6 +79,29 @@ pipeline {
                         }
                     }
                 }
+                stage('Login to Docker') {
+                                    steps {
+                                        echo 'Logging to DockerHub...'
+                                        script {
+                                            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                                                sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                                                echo 'DockerHub login successful.'
+                                            }
+                                        }
+                                        echo 'Login to DockerHub stage completed.'
+                                    }
+                                }
+
+                 stage('Push to DockerHub') {
+                                    steps {
+                                        echo 'Pushing to DockerHub...'
+                                        script {
+                                            sh "docker push youssefmathlouthi/skiback:latest"
+                                            echo "Docker image pushed: youssefmathlouthi/skiback:latest"
+                                        }
+                                        echo 'Push to DockerHub stage completed.'
+                                    }
+                                }
         stage('Docker Compose Up') {
             steps {
                 echo 'Démarrage des services avec Docker Compose :'
