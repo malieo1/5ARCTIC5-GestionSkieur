@@ -24,7 +24,8 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-@TestPropertySource(locations="classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.properties")
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class SubscriptionServiceTest {
 
