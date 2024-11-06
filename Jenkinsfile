@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    triggers {
+            githubPush()
+        }
     environment {
         // Nexus credentials
         NEXUS_CREDENTIALS = credentials('nexus-admin-credentials')
