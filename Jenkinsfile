@@ -59,12 +59,14 @@ pipeline {
                     }*/
 
              stage('Build Docker Image') {
-                         steps {
-                             script {
-                                dockerImage = docker.build "${registry}:${IMAGE_TAG}"
-                             }
-                         }
+                 steps {
+                     script {
+                         echo "Building Docker image with tag: ${IMAGE_TAG}"
+                         dockerImage = docker.build "${registry}:${IMAGE_TAG}"
                      }
+                 }
+             }
+
 
                      stage('Push to DockerHub') {
                          steps {
