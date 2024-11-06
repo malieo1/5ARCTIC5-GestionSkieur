@@ -123,7 +123,7 @@ pipeline {
             }
         }
     }
-    stage('restarting prometheus & grafana') {
+        stage('restarting prometheus & grafana') {
                         steps {
                             echo 'Containers restarted :'
                             sh 'docker restart prometheus '
