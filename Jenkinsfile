@@ -6,6 +6,7 @@ pipeline {
             NEXUS_CREDENTIALS = credentials('nexus-credentials')
             DOCKER_CREDENTIALS = credentials('docker-credentials')
             registry = 'rezguimedamine/gestion-station-ski'
+            dockerImage = ''
            RELEASE_VERSION = "1.0"
            IMAGE_TAG = "${RELEASE_VERSION}-${env.BUILD_NUMBER}"
 
