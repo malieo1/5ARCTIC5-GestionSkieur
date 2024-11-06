@@ -77,18 +77,18 @@ pipeline {
             }
         }
 
-//          stage('Login to Docker') {
-//                     steps {
-//                         echo 'Logging to DockerHub...'
-//                         script {
-//                             withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-//                                 sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-//                                 echo 'DockerHub login successful.'
-//                             }
-//                         }
-//                         echo 'Login to DockerHub stage completed.'
-//                     }
-//                 }
+         stage('Login to Docker') {
+                    steps {
+                        echo 'Logging to DockerHub...'
+                        script {
+                            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                                sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                                echo 'DockerHub login successful.'
+                            }
+                        }
+                        echo 'Login to DockerHub stage completed.'
+                    }
+                }
 
                 stage('Push to DockerHub') {
                     steps {
@@ -123,6 +123,13 @@ pipeline {
             }
         }
     }
+    stage('restarting prometheus & grafana') {
+                        steps {
+                            echo 'Containers restarted :'
+                            sh 'docker restart prometheus '
+                            sh 'docker restart grafana '
+                        }
+                    }
 
     post {
         always {
