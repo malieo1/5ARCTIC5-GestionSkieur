@@ -122,14 +122,16 @@ pipeline {
                 }
             }
         }
-    }
+
         stage('restarting prometheus & grafana') {
-                        steps {
-                            echo 'Containers restarted :'
-                            sh 'docker restart prometheus '
-                            sh 'docker restart grafana '
-                        }
-                    }
+                                steps {
+                                    echo 'Containers restarted :'
+                                    sh 'docker restart prometheus '
+                                    sh 'docker restart grafana '
+                                }
+                            }
+    }
+
 
     post {
         always {
