@@ -59,7 +59,7 @@ pipeline {
                         // Run Trivy to scan the Docker image
                         echo 'Scanning Docker image with Trivy:'
                         sh "sh "trivy image --cache-dir /path/to/cache --exit-code 1 --no-progress khalilbelhedi336/skiback:${env.IMAGE_TAG}"
-"
+
                     }
                 }
             }
