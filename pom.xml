@@ -96,6 +96,16 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope> <!-- Utilisez 'test' si vous ne voulez l'utiliser que pour les tests -->
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 	</dependencies>
 
