@@ -13,6 +13,8 @@ import tn.esprit.spring.repositories.ISubscriptionRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @AllArgsConstructor
@@ -58,6 +60,13 @@ public class SubscriptionServicesImpl implements ISubscriptionServices{
     public List<Subscription> retrieveSubscriptionsByDates(LocalDate startDate, LocalDate endDate) {
         return subscriptionRepository.getSubscriptionsByStartDateBetween(startDate, endDate);
     }
+
+    @Override
+    public List<Subscription> getall() {
+        return StreamSupport.stream(subscriptionRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     @Scheduled(cron = "*/30 * * * * *") /* Cron expression to run a job every 30 secondes */

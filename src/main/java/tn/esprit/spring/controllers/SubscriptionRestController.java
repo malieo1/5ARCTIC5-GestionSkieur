@@ -25,6 +25,11 @@ public class SubscriptionRestController {
     public Subscription addSubscription(@RequestBody Subscription subscription){
         return  subscriptionServices.addSubscription(subscription);
     }
+    @Operation(description = "get all subscriptions")
+    @GetMapping("/all")
+    public List<Subscription> getAllSubscriptions() {
+        return subscriptionServices.getall();
+    }
     @Operation(description = "Retrieve Subscription by Id")
     @GetMapping("/get/{id-subscription}")
     public Subscription getById(@PathVariable("id-subscription") Long numSubscription){
