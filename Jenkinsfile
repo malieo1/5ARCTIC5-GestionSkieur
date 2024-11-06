@@ -109,7 +109,7 @@ pipeline {
 
         stage('Deploy with Docker Compose') {
             steps {
-                echo 'Deploying with Docker Compose...'
+                echo 'Docker Compose Deployment...'
                 script {
                     echo 'Stopping existing containers...'
                     sh 'docker compose down || true'
