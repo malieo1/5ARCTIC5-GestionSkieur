@@ -26,6 +26,8 @@ pipeline {
 
                     // Build the jar with the commit ID as part of the version
                     sh "mvn clean package -Drevision=${commitId}"
+                    sh 'ls target'
+
                 }
             }
         }
