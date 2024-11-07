@@ -102,7 +102,6 @@ pipeline {
         stage('Pull Docker Image') {
             steps {
                 sshagent(['k8s-target-ssh']) {
-                    // Pull the Docker image on the target VM
                     sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 " docker pull khalilbelhedi336/skiback:${IMAGE_TAG}"'
                 }
             }
@@ -111,7 +110,6 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sshagent(['k8s-target-ssh']) {
-                    // Update the image in the Kubernetes deployment
                     sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "kubectl set image deployment/spring-boot-app spring-boot=khalilbelhedi336/skiback:${IMAGE_TAG}"'
                 }
             }
