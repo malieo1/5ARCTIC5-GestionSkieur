@@ -131,6 +131,9 @@ pipeline {
     post {
         success {
             echo 'Build finished successfully!'
+            mail to: 'farah.diouani@esprit.tn',
+                             subject: "Jenkins Job Finished Successfully: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+                             body: "Your jenkins job ${env.JOB_NAME} [${env.BUILD_NUMBER}] has finished successfully."
         }
         failure {
             echo 'Build failed!'
