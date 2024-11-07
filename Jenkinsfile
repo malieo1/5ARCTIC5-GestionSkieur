@@ -68,7 +68,7 @@ pipeline {
         stage ("Trivy image scan") {
                     steps {
                         script {
-                            sh "trivy image --scanners vuln khalilbelhedi336/skiback:${commitId} > trivy.txt"
+                            sh "trivy image --scanners vuln khalilbelhedi336/skiback:${IMAGE_TAG} > trivy.txt"
                         }
                     }
                 }
