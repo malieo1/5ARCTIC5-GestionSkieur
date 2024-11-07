@@ -19,7 +19,9 @@ pipeline {
             steps {
                 echo 'Fetching Code from Git:'
                 git branch: 'khalilbelhedi-5arctic5',
-                    url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
+                    url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git',
+	          credentialsId: 'github-token'
+	            
             }
         }
 
