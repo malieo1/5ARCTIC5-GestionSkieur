@@ -65,13 +65,7 @@ pipeline {
                 }
             }
         }
-        stage ("Trivy image scan") {
-                    steps {
-                        script {
-                            sh "trivy image --scanners vuln khalilbelhedi336/skiback:${IMAGE_TAG} > trivy.txt"
-                        }
-                    }
-                }
+
 
         stage('Login to Docker') {
             steps {
@@ -128,15 +122,7 @@ pipeline {
             slackSend channel: '#devops-slack-notifications', color: 'red', message: 'Build failed', teamDomain: 'virtiverse', tokenCredentialId: 'slack-token'
         }
 
-        always {
-                emailext attachLog: true,
-                    subject: "'${currentBuild.result}'",
-                    body: "Project: ${env.JOB_NAME}<br/>" +
-                        "Build Number: ${env.BUILD_NUMBER}<br/>" +
-                        "URL: ${env.BUILD_URL}<br/>",
-                    to: 'khalillloubelhedi@gmail.com',
-                    attachmentsPattern: 'trivy.txt'
-                }
+
 
     }
 }
