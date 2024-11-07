@@ -101,8 +101,7 @@ pipeline {
                     steps {
                         sshagent(['k8s-target-ssh']) {
                             // Mise à jour de l'image dans le déploiement Kubernetes
-                            sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "kubectl set image deployment/spring-boot-app spring-boot=khalilbelhedi336/skiback:${IMAGE_TAG}
-"'
+                            sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "kubectl set image deployment/spring-boot-app spring-boot=khalilbelhedi336/skiback:${IMAGE_TAG}"'
                         }
                     }
                 }
