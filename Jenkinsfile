@@ -1,5 +1,7 @@
 pipeline {
     agent any
+
+//ngrok
     triggers {
         githubPush()
     }
