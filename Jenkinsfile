@@ -128,7 +128,7 @@ stage('Start prometheus and grafana') {
             }
         }
 
-    }
+
 
     post {
         success {
