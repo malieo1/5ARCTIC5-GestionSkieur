@@ -41,13 +41,20 @@ pipeline {
                          }
                      }
 
-            stage('MVN Sonarqube') {
-                               steps {
-                                   withCredentials([string(credentialsId: 'SonarQube', variable: 'SONAR_TOKEN')]) {
-                                       sh "mvn sonar:sonar -Dsonar.login=squ_be80c3f2f2118c43ca72c88e151369352f4f4a3c"
-                                   }
-                               }
-                           }
+        stage('MVN Sonarqube') {
+            steps {
+                withCredentials([string(credentialsId: 'SonarQube', variable: 'SONAR_TOKEN')]) {
+                    sh """
+                        mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=YourProjectKey \
+                        -Dsonar.host.url=http://your-sonarqube-server-url \
+                        -Dsonar.login=${SONAR_TOKEN} \
+                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                    """
+                }
+            }
+        }
+
 
             stage('Deploy to Nexus') {
                         steps {
