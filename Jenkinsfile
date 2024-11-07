@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-//ngrok
+    //ngrok
     triggers {
         githubPush()
     }
@@ -20,8 +20,6 @@ pipeline {
                 echo 'Fetching Code from Git:'
                 git branch: 'khalilbelhedi-5arctic5',
                     url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
-	          
-	            
             }
         }
 
@@ -74,7 +72,6 @@ pipeline {
             }
         }
 
-
         stage('Login to Docker') {
             steps {
                 echo 'Logging into DockerHub...'
@@ -103,32 +100,13 @@ pipeline {
             }
         }
 
-      //  stage('Pull Docker Image') {
-        //    steps {
-          //      sshagent(['k8s-target-ssh']) {
-            //        sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 " docker pull khalilbelhedi336/skiback:${IMAGE_TAG}"'
-              //  }
-           // }
-       // }
-
-        // stage('Deploy to Kubernetes') {
-           // steps {
-             //   sshagent(['k8s-target-ssh']) {
-               //     sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "kubectl set image deployment/spring-boot-app spring-boot=khalilbelhedi336/skiback:${IMAGE_TAG}"'
-               // }
-           // }
-       // }
-stage('Start prometheus and grafana') {
+        stage('Start prometheus and grafana') {
             steps {
-               
-                sh 'docker start prometheus '
-		
-                sh 'docker start grafana '
-
+                sh 'docker start prometheus'
+                sh 'docker start grafana'
             }
         }
-
-
+    }
 
     post {
         success {
@@ -137,11 +115,5 @@ stage('Start prometheus and grafana') {
         failure {
             slackSend channel: '#devops-slack-notifications', color: 'red', message: 'Build failed', teamDomain: 'virtiverse', tokenCredentialId: 'slack-token'
         }
-
-
-
     }
-
-}
-
 }
