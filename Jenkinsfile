@@ -5,15 +5,13 @@ pipeline {
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "192.168.50.4:8081"
         NEXUS_REPOSITORY = "maven-releases"
-        NEXUS_CREDENTIAL_ID = "admin"
         DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
-
     }
 
     stages {
         stage('Git') {
             steps {
-                echo 'Recup Code de Git:'
+                echo 'Fetching Code from Git:'
                 git branch: 'khalilbelhedi-5arctic5',
                     url: 'https://github.com/malieo1/5ARCTIC5-GestionSkieur.git'
             }
@@ -21,64 +19,78 @@ pipeline {
 
         stage('Maven Clean') {
             steps {
-                echo 'Nettoyage du Projet:'
+                echo 'Cleaning the Project:'
                 sh 'mvn clean package'
             }
         }
 
         stage('Maven Compile') {
             steps {
-                echo 'Construction du Projet:'
+                echo 'Building the Project:'
                 sh 'mvn compile'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Execution des Tests:'
+                echo 'Running Tests:'
                 sh 'mvn test'
             }
         }
-           stage('SonarQube') {
-                    steps {
-                        echo 'Analyse de la Qualité du Code : '
-                        sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Admin@dmin123'
-                    }
-                }
 
-            stage('Deploy to Nexus') {
-                            steps {
-                                    sh "mvn deploy -Dmaven.test.skip=true "
-                                }
-                            }
+        stage('SonarQube') {
+            steps {
+                echo 'Code Quality Analysis:'
+                withCredentials([usernamePassword(credentialsId: 'sonar-credentials', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASSWORD')]) {
+                    sh "mvn sonar:sonar -Dsonar.login=$SONAR_USER -Dsonar.password=$SONAR_PASSWORD"
+                }
+            }
+        }
+
+        stage('Deploy to Nexus') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    sh "mvn deploy -Dmaven.test.skip=true -Dusername=$NEXUS_USER -Dpassword=$NEXUS_PASSWORD"
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Utiliser l'ID de commit comme tag pour l'image
+                    // Using the commit ID as the tag for the image
                     def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     sh "docker build -t khalilbelhedi336/skiback:${commitId} ."
-                    env.IMAGE_TAG = commitId // Stocke l'ID de commit comme tag d'image
+                    env.IMAGE_TAG = commitId // Store the commit ID as the image tag
                 }
             }
         }
-         stage('Login to Docker') {
-                            steps {
-                                echo 'Logging to DockerHub...'
-                                script {
-                                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                                        echo 'DockerHub login successful.'
-                                    }
-                                }
-                                echo 'Login to DockerHub stage completed.'
-                            }
+        stage ("Trivy image scan") {
+                    steps {
+                        script {
+                            sh "trivy image --scanners vuln khalilbelhedi336/skiback:${commitId} > trivy.txt"
                         }
-        stage('push to dockerhub') {
-                                    steps {
-                                            sh "docker push khalilbelhedi336/skiback:${IMAGE_TAG}"
-                                        }
-                                    }
+                    }
+                }
+
+        stage('Login to Docker') {
+            steps {
+                echo 'Logging into DockerHub...'
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                        echo 'DockerHub login successful.'
+                    }
+                }
+                echo 'DockerHub login completed.'
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                sh "docker push khalilbelhedi336/skiback:${IMAGE_TAG}"
+            }
+        }
 
         stage('Deploy with Docker Compose') {
             steps {
@@ -88,22 +100,43 @@ pipeline {
                 }
             }
         }
+
         stage('Pull Docker Image') {
-                    steps {
-                        sshagent(['k8s-target-ssh']) {
-                            // Pull de l'image Docker sur la VM cible
-                            sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 " docker pull khalilbelhedi336/skiback:${IMAGE_TAG}"'
-                        }
-                    }
+            steps {
+                sshagent(['k8s-target-ssh']) {
+                    // Pull the Docker image on the target VM
+                    sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 " docker pull khalilbelhedi336/skiback:${IMAGE_TAG}"'
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sshagent(['k8s-target-ssh']) {
+                    // Update the image in the Kubernetes deployment
+                    sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "kubectl set image deployment/spring-boot-app spring-boot=khalilbelhedi336/skiback:${IMAGE_TAG}"'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            slackSend channel: '#devops-slack-notifications', color: 'green', message: 'Build success', teamDomain: 'virtiverse', tokenCredentialId: 'slack-token'
+        }
+        failure {
+            slackSend channel: '#devops-slack-notifications', color: 'red', message: 'Build failed', teamDomain: 'virtiverse', tokenCredentialId: 'slack-token'
+        }
+
+        always {
+                emailext attachLog: true,
+                    subject: "'${currentBuild.result}'",
+                    body: "Project: ${env.JOB_NAME}<br/>" +
+                        "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                        "URL: ${env.BUILD_URL}<br/>",
+                    to: 'khalillloubelhedi@gmail.com',
+                    attachmentsPattern: 'trivy.txt'
                 }
 
-                stage('Deploy to Kubernetes') {
-                    steps {
-                        sshagent(['k8s-target-ssh']) {
-                            // Mise à jour de l'image dans le déploiement Kubernetes
-                            sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "kubectl set image deployment/spring-boot-app spring-boot=khalilbelhedi336/skiback:${IMAGE_TAG}"'
-                        }
-                    }
-                }
     }
 }
