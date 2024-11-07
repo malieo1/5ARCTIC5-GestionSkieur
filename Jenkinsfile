@@ -44,13 +44,7 @@ pipeline {
         stage('MVN Sonarqube') {
             steps {
                 withCredentials([string(credentialsId: 'SonarQube', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=YourProjectKey \
-                        -Dsonar.host.url=http://your-sonarqube-server-url \
-                        -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-                    """
+                    sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN} -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
                 }
             }
         }
