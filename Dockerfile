@@ -7,4 +7,4 @@ WORKDIR /app
 
 COPY target/*.jar /app.jar
 
-ENTRYPOINT ["java", "-jar", "gestion-station-ski-1.0.jar", "--spring.profiles.active=prod"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
