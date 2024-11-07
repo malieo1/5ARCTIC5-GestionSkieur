@@ -103,21 +103,21 @@ pipeline {
             }
         }
 
-        stage('Pull Docker Image') {
-            steps {
-                sshagent(['k8s-target-ssh']) {
-                    sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 " docker pull khalilbelhedi336/skiback:${IMAGE_TAG}"'
-                }
-            }
-        }
+      //  stage('Pull Docker Image') {
+        //    steps {
+          //      sshagent(['k8s-target-ssh']) {
+            //        sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 " docker pull khalilbelhedi336/skiback:${IMAGE_TAG}"'
+              //  }
+           // }
+       // }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                sshagent(['k8s-target-ssh']) {
-                    sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "kubectl set image deployment/spring-boot-app spring-boot=khalilbelhedi336/skiback:${IMAGE_TAG}"'
-                }
-            }
-        }
+        // stage('Deploy to Kubernetes') {
+           // steps {
+             //   sshagent(['k8s-target-ssh']) {
+               //     sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "kubectl set image deployment/spring-boot-app spring-boot=khalilbelhedi336/skiback:${IMAGE_TAG}"'
+               // }
+           // }
+       // }
 stage('Start prometheus and grafana') {
             steps {
                
