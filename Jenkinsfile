@@ -6,6 +6,8 @@ pipeline {
         NEXUS_URL = "192.168.50.4:8081"
         NEXUS_REPOSITORY = "maven-releases"
         NEXUS_CREDENTIAL_ID = "admin"
+        DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
+
     }
 
     stages {
@@ -60,6 +62,18 @@ pipeline {
                 }
             }
         }
+         stage('Login to Docker') {
+                            steps {
+                                echo 'Logging to DockerHub...'
+                                script {
+                                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                                        echo 'DockerHub login successful.'
+                                    }
+                                }
+                                echo 'Login to DockerHub stage completed.'
+                            }
+                        }
         stage('push to dockerhub') {
                                     steps {
                                             sh "docker push khalilbelhedi336/skiback:${IMAGE_TAG}"
