@@ -44,11 +44,11 @@ pipeline {
                     }
                 }
 
-        stage('Deploy to Nexus') {
-                        steps {
-                                sh "mvn deploy -Dmaven.test.skip=true "
+            stage('Deploy to Nexus') {
+                            steps {
+                                    sh "mvn deploy -Dmaven.test.skip=true "
+                                }
                             }
-                        }
 
         stage('Build Docker Image') {
             steps {
@@ -60,6 +60,11 @@ pipeline {
                 }
             }
         }
+        stage('push to dockerhub') {
+                                    steps {
+                                            sh "docker push khalilbelhedi336/skiback:${IMAGE_TAG}"
+                                        }
+                                    }
 
         stage('Deploy with Docker Compose') {
             steps {
@@ -69,5 +74,22 @@ pipeline {
                 }
             }
         }
+        stage('Pull Docker Image') {
+                    steps {
+                        sshagent(['k8s-target-ssh']) {
+                            // Pull de l'image Docker sur la VM cible
+                            sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "docker pull khalilbelhedi336/skiback:${IMAGE_TAG}"'
+                        }
+                    }
+                }
+
+                stage('Deploy to Kubernetes') {
+                    steps {
+                        sshagent(['k8s-target-ssh']) {
+                            // Mise à jour de l'image dans le déploiement Kubernetes
+                            sh 'ssh -o StrictHostKeyChecking=no production@192.168.133.130 "kubectl set image deployment/spring-boot-app app-container=khalilbelhedi336/skiback:${IMAGE_TAG}"'
+                        }
+                    }
+                }
     }
 }
