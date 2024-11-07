@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    triggers {
+        githubPush()
+    }
+
     environment {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
